@@ -1,82 +1,701 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel Maestro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Maestro</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    body {
+      background: #f5f7fb;
+      color: #1f2937;
+    }
 
-<style>
-body { font-family: Arial; background:#f5f7fb; margin:0; }
-.container { padding:20px; }
-button { padding:10px; border:none; background:#f59e0b; color:white; border-radius:8px; cursor:pointer; }
-.card { background:white; padding:15px; margin:10px 0; border-radius:10px; }
-</style>
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: #111827;
+      color: white;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .logo span {
+      color: #f59e0b;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: #d1d5db;
+      padding: 12px 14px;
+      border-radius: 10px;
+      transition: 0.2s ease;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: #1f2937;
+      color: white;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+
+    .main {
+      flex: 1;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .topbar h1 {
+      font-size: 2rem;
+      color: #111827;
+    }
+
+    .topbar p {
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    .btn {
+      background: #f59e0b;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #d97706;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
+
+    .btn-danger:hover {
+      background: #fecaca;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .card .value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-header h2 {
+      font-size: 1.4rem;
+    }
+
+    .stores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    .store-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border-top: 4px solid #e5e7eb;
+    }
+
+    .store-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .store-top h3 {
+      font-size: 1.1rem;
+      color: #111827;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .badge.active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.inactive {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .store-info {
+      color: #6b7280;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .store-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .empty-state {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      color: #6b7280;
+      text-align: center;
+    }
+
+    .status-message {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      display: none;
+      font-size: 0.95rem;
+    }
+
+    .status-message.show {
+      display: block;
+    }
+
+    .status-message.success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-message.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+
+    .modal h2 {
+      margin-bottom: 8px;
+      font-size: 1.5rem;
+      color: #111827;
+    }
+
+    .modal p {
+      color: #6b7280;
+      margin-bottom: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.92rem;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      outline: none;
+      font-size: 0.96rem;
+      background: white;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .color-preview {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: #f59e0b;
+      border: 1px solid #e5e7eb;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .topbar h1 {
+        font-size: 1.6rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
-<div class="container">
-<h1>Panel Maestro</h1>
-<button onclick="crearLocal()">+ Crear local</button>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">Panel<span>Maestro</span></div>
 
-<div id="lista"></div>
-</div>
+      <nav class="menu">
+        <a href="#" class="active">Dashboard</a>
+        <a href="#">Locales</a>
+        <a href="#">Pedidos</a>
+        <a href="#">Menús</a>
+        <a href="#">Configuración</a>
+      </nav>
 
-<script>
-const SUPABASE_URL = "https://bkycmybpouygdvyuczqu.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_WJN6L01FPmlusK0Eci3lig_0o-e1UVh";
+      <div class="sidebar-footer">
+        Panel central de gestión multi-local
+      </div>
+    </aside>
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <main class="main">
+      <div id="statusMessage" class="status-message"></div>
 
-async function crearLocal() {
-  const nombre = prompt("Nombre del local:");
-  if (!nombre) return;
+      <div class="topbar">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Gestioná todos tus locales desde un solo lugar.</p>
+        </div>
+        <button class="btn" id="openCreateStoreBtn">+ Crear local</button>
+      </div>
 
-  const slug = nombre.toLowerCase().replace(/\s+/g, "-");
+      <section class="stats">
+        <div class="card">
+          <h3>Locales activos</h3>
+          <div class="value" id="activeStoresCount">0</div>
+        </div>
 
-  const { error } = await supabase.from("stores").insert([{
-    name: nombre,
-    slug: slug,
-    whatsapp: "",
-    description: "",
-    primary_color: "#f59e0b",
-    is_active: true
-  }]);
+        <div class="card">
+          <h3>Pedidos hoy</h3>
+          <div class="value" id="ordersTodayCount">0</div>
+        </div>
 
-  if (error) {
-    alert("Error: " + error.message);
-    return;
-  }
+        <div class="card">
+          <h3>Ventas del día</h3>
+          <div class="value" id="salesTodayValue">$0</div>
+        </div>
 
-  cargarLocales();
-}
+        <div class="card">
+          <h3>Locales inactivos</h3>
+          <div class="value" id="inactiveStoresCount">0</div>
+        </div>
+      </section>
 
-async function cargarLocales() {
-  const { data } = await supabase.from("stores").select("*");
+      <section>
+        <div class="section-header">
+          <h2>Tus locales</h2>
+        </div>
 
-  const lista = document.getElementById("lista");
-  lista.innerHTML = "";
+        <div class="stores-grid" id="storesGrid">
+          <div class="empty-state">Cargando locales...</div>
+        </div>
+      </section>
+    </main>
+  </div>
 
-  data.forEach(local => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `
-      <strong>${local.name}</strong><br>
-      slug: ${local.slug}<br>
-      <button onclick="eliminar('${local.id}')">Eliminar</button>
-    `;
-    lista.appendChild(div);
-  });
-}
+  <div class="modal-overlay" id="createStoreModal">
+    <div class="modal">
+      <h2>Crear local</h2>
+      <p>Cargá la información base del nuevo local.</p>
 
-async function eliminar(id) {
-  await supabase.from("stores").delete().eq("id", id);
-  cargarLocales();
-}
+      <form id="createStoreForm">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="storeName">Nombre del local</label>
+            <input type="text" id="storeName" placeholder="Ej: El Tenedor" required />
+          </div>
 
-cargarLocales();
-</script>
+          <div class="form-group">
+            <label for="storeSlug">Slug</label>
+            <input type="text" id="storeSlug" placeholder="ej-el-tenedor" required />
+          </div>
 
+          <div class="form-group">
+            <label for="storeWhatsapp">WhatsApp</label>
+            <input type="text" id="storeWhatsapp" placeholder="549xxxxxxxxxx" />
+          </div>
+
+          <div class="form-group">
+            <label for="storeColor">Color principal</label>
+            <input type="text" id="storeColor" value="#f59e0b" placeholder="#f59e0b" />
+            <div class="color-preview" id="colorPreview"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="storeStatus">Estado</label>
+            <select id="storeStatus">
+              <option value="true" selected>Activo</option>
+              <option value="false">Inactivo</option>
+            </select>
+          </div>
+
+          <div class="form-group full">
+            <label for="storeDescription">Descripción</label>
+            <textarea id="storeDescription" placeholder="Ej: Variedad de comidas con delivery y retiro en local"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancelCreateStoreBtn">Cancelar</button>
+          <button type="submit" class="btn" id="submitCreateStoreBtn">Guardar local</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://bkycmybpouygdvyuczqu.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_WJN6L01FPmlusK0Eci3lig_0o-e1UVh";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const openCreateStoreBtn = document.getElementById("openCreateStoreBtn");
+    const cancelCreateStoreBtn = document.getElementById("cancelCreateStoreBtn");
+    const createStoreModal = document.getElementById("createStoreModal");
+    const createStoreForm = document.getElementById("createStoreForm");
+    const storesGrid = document.getElementById("storesGrid");
+    const activeStoresCount = document.getElementById("activeStoresCount");
+    const inactiveStoresCount = document.getElementById("inactiveStoresCount");
+    const statusMessage = document.getElementById("statusMessage");
+    const submitCreateStoreBtn = document.getElementById("submitCreateStoreBtn");
+    const storeNameInput = document.getElementById("storeName");
+    const storeSlugInput = document.getElementById("storeSlug");
+    const storeColorInput = document.getElementById("storeColor");
+    const colorPreview = document.getElementById("colorPreview");
+
+    function showStatus(message, type = "success") {
+      statusMessage.textContent = message;
+      statusMessage.className = `status-message show ${type}`;
+      setTimeout(() => {
+        statusMessage.className = "status-message";
+      }, 3500);
+    }
+
+    function openModal() {
+      createStoreModal.classList.add("show");
+      storeNameInput.focus();
+    }
+
+    function closeModal() {
+      createStoreModal.classList.remove("show");
+      createStoreForm.reset();
+      storeColorInput.value = "#f59e0b";
+      colorPreview.style.background = "#f59e0b";
+    }
+
+    function slugify(text) {
+      return text
+        .toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
+    }
+
+    function updateCounters(stores) {
+      const active = stores.filter(store => store.is_active).length;
+      const inactive = stores.filter(store => !store.is_active).length;
+
+      activeStoresCount.textContent = active;
+      inactiveStoresCount.textContent = inactive;
+    }
+
+    function renderStores(stores) {
+      updateCounters(stores);
+
+      if (!stores || stores.length === 0) {
+        storesGrid.innerHTML = '<div class="empty-state">Todavía no tenés locales cargados. Creá el primero con el botón naranja.</div>';
+        return;
+      }
+
+      storesGrid.innerHTML = stores.map(store => `
+        <article class="store-card" style="border-top-color: ${store.primary_color || "#e5e7eb"}">
+          <div class="store-top">
+            <h3>${store.name || "Sin nombre"}</h3>
+            <span class="badge ${store.is_active ? "active" : "inactive"}">
+              ${store.is_active ? "Activo" : "Inactivo"}
+            </span>
+          </div>
+
+          <div class="store-info">
+            <strong>Slug:</strong> ${store.slug || "-"}<br>
+            <strong>WhatsApp:</strong> ${store.whatsapp || "-"}<br>
+            <strong>Descripción:</strong> ${store.description || "Sin descripción"}
+          </div>
+
+          <div class="store-actions">
+            <button class="btn-secondary" type="button">Ver pedidos</button>
+            <button class="btn-secondary" type="button">Editar menú</button>
+            <button class="btn-danger" type="button" onclick="deleteStore('${store.id}')">Eliminar</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    async function loadStores() {
+      storesGrid.innerHTML = '<div class="empty-state">Cargando locales...</div>';
+
+      const { data, error } = await supabase
+        .from("stores")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error cargando locales:", error);
+        storesGrid.innerHTML = '<div class="empty-state">No se pudieron cargar los locales. Revisá la tabla o las policies en Supabase.</div>';
+        showStatus("No se pudieron cargar los locales.", "error");
+        return;
+      }
+
+      renderStores(data || []);
+    }
+
+    async function createStore(storeData) {
+      const { error } = await supabase
+        .from("stores")
+        .insert([storeData]);
+
+      if (error) {
+        console.error("Error creando local:", error);
+
+        if (error.message && error.message.toLowerCase().includes("duplicate")) {
+          showStatus("Ese slug ya existe. Elegí otro.", "error");
+        } else {
+          showStatus("No se pudo guardar el local.", "error");
+        }
+        return false;
+      }
+
+      return true;
+    }
+
+    async function deleteStore(id) {
+      const ok = confirm("¿Seguro que querés eliminar este local?");
+      if (!ok) return;
+
+      const { error } = await supabase
+        .from("stores")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        console.error("Error eliminando local:", error);
+        showStatus("No se pudo eliminar el local.", "error");
+        return;
+      }
+
+      showStatus("Local eliminado correctamente.");
+      loadStores();
+    }
+
+    window.deleteStore = deleteStore;
+
+    openCreateStoreBtn.addEventListener("click", openModal);
+    cancelCreateStoreBtn.addEventListener("click", closeModal);
+
+    createStoreModal.addEventListener("click", (e) => {
+      if (e.target === createStoreModal) {
+        closeModal();
+      }
+    });
+
+    storeNameInput.addEventListener("input", () => {
+      storeSlugInput.value = slugify(storeNameInput.value);
+    });
+
+    storeColorInput.addEventListener("input", () => {
+      colorPreview.style.background = storeColorInput.value || "#f59e0b";
+    });
+
+    createStoreForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const storeData = {
+        name: document.getElementById("storeName").value.trim(),
+        slug: document.getElementById("storeSlug").value.trim(),
+        whatsapp: document.getElementById("storeWhatsapp").value.trim(),
+        description: document.getElementById("storeDescription").value.trim(),
+        primary_color: document.getElementById("storeColor").value.trim() || "#f59e0b",
+        is_active: document.getElementById("storeStatus").value === "true"
+      };
+
+      if (!storeData.name || !storeData.slug) {
+        showStatus("Nombre y slug son obligatorios.", "error");
+        return;
+      }
+
+      submitCreateStoreBtn.disabled = true;
+      submitCreateStoreBtn.textContent = "Guardando...";
+
+      const ok = await createStore(storeData);
+
+      submitCreateStoreBtn.disabled = false;
+      submitCreateStoreBtn.textContent = "Guardar local";
+
+      if (!ok) return;
+
+      closeModal();
+      showStatus("Local creado correctamente.");
+      loadStores();
+    });
+
+    loadStores();
+  </script>
 </body>
 </html>
