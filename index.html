@@ -5,227 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel Maestro</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+    :root {
+      --bg:#f5f7fb; --text:#1f2937; --muted:#6b7280; --sidebar:#111827; --sidebar-hover:#1f2937;
+      --primary:#f59e0b; --primary-hover:#d97706; --card:#fff; --shadow:0 4px 14px rgba(0,0,0,.06);
+      --success-bg:#dcfce7; --success-text:#166534; --danger-bg:#fee2e2; --danger-text:#991b1b; --border:#e5e7eb;
     }
-
-    body {
-      background: #f5f7fb;
-      color: #1f2937;
-    }
-
-    .layout {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      width: 260px;
-      background: #111827;
-      color: white;
-      padding: 24px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .logo {
-      font-size: 1.6rem;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-    }
-
-    .logo span {
-      color: #f59e0b;
-    }
-
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .menu a {
-      text-decoration: none;
-      color: #d1d5db;
-      padding: 12px 14px;
-      border-radius: 10px;
-      transition: 0.2s ease;
-    }
-
-    .menu a:hover,
-    .menu a.active {
-      background: #1f2937;
-      color: white;
-    }
-
-    .sidebar-footer {
-      margin-top: auto;
-      font-size: 0.9rem;
-      color: #9ca3af;
-    }
-
-    .main {
-      flex: 1;
-      padding: 28px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-
-    .topbar h1 {
-      font-size: 2rem;
-      color: #111827;
-    }
-
-    .topbar p {
-      color: #6b7280;
-      margin-top: 6px;
-    }
-
-    .btn {
-      background: #f59e0b;
-      color: white;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.2s ease;
-    }
-
-    .btn:hover {
-      background: #d97706;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-      margin-bottom: 30px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-    }
-
-    .card h3 {
-      font-size: 1rem;
-      color: #6b7280;
-      margin-bottom: 10px;
-    }
-
-    .card .value {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #111827;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .section-header h2 {
-      font-size: 1.4rem;
-    }
-
-    .stores-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 18px;
-    }
-
-    .store-card {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .store-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .store-top h3 {
-      font-size: 1.1rem;
-      color: #111827;
-    }
-
-    .badge {
-      background: #dcfce7;
-      color: #166534;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .store-info {
-      color: #6b7280;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .store-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #111827;
-      border: none;
-      padding: 10px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .btn-secondary:hover {
-      background: #d1d5db;
-    }
-
+    body { background: var(--bg); color: var(--text); }
+    .layout { display:flex; min-height:100vh; }
+    .sidebar { width:260px; background:var(--sidebar); color:#fff; padding:24px 18px; display:flex; flex-direction:column; gap:24px; }
+    .logo { font-size:1.6rem; font-weight:bold; letter-spacing:.5px; }
+    .logo span { color:var(--primary); }
+    .menu { display:flex; flex-direction:column; gap:10px; }
+    .menu a { text-decoration:none; color:#d1d5db; padding:12px 14px; border-radius:10px; transition:.2s ease; }
+    .menu a:hover,.menu a.active { background:var(--sidebar-hover); color:#fff; }
+    .sidebar-footer { margin-top:auto; font-size:.9rem; color:#9ca3af; }
+    .main { flex:1; padding:28px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+    .topbar h1 { font-size:2rem; color:#111827; }
+    .topbar p { color:var(--muted); margin-top:6px; }
+    .btn,.btn-secondary,.btn-danger,.close-btn { border:none; cursor:pointer; transition:.2s ease; font-weight:bold; }
+    .btn { background:var(--primary); color:#fff; padding:12px 18px; border-radius:10px; }
+    .btn:hover { background:var(--primary-hover); }
+    .btn-secondary { background:#e5e7eb; color:#111827; padding:10px 14px; border-radius:10px; }
+    .btn-secondary:hover, .close-btn:hover { background:#d1d5db; }
+    .btn-danger { background:#fee2e2; color:#991b1b; padding:10px 14px; border-radius:10px; }
+    .btn-danger:hover { background:#fecaca; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:18px; margin-bottom:30px; }
+    .card { background:var(--card); border-radius:16px; padding:20px; box-shadow:var(--shadow); }
+    .card h3 { font-size:1rem; color:var(--muted); margin-bottom:10px; }
+    .card .value { font-size:2rem; font-weight:bold; color:#111827; }
+    .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px; }
+    .section-header h2 { font-size:1.4rem; }
+    .stores-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(290px,1fr)); gap:18px; }
+    .store-card { background:#fff; border-radius:16px; padding:20px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px; border-top:5px solid #e5e7eb; }
+    .store-top { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .store-top h3 { font-size:1.1rem; color:#111827; line-height:1.2; }
+    .badge { padding:6px 10px; border-radius:999px; font-size:.8rem; font-weight:bold; white-space:nowrap; }
+    .badge.active { background:var(--success-bg); color:var(--success-text); }
+    .badge.inactive { background:var(--danger-bg); color:var(--danger-text); }
+    .store-info { color:var(--muted); font-size:.95rem; line-height:1.6; }
+    .store-info strong { color:var(--text); }
+    .store-actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .empty-state { background:#fff; border-radius:16px; padding:28px; box-shadow:var(--shadow); color:var(--muted); }
+    .empty-state h3 { color:var(--text); margin-bottom:8px; font-size:1.1rem; }
+    .modal { position:fixed; inset:0; background:rgba(17,24,39,.55); display:none; align-items:center; justify-content:center; padding:20px; z-index:1000; }
+    .modal.show { display:flex; }
+    .modal-content { width:100%; max-width:560px; background:#fff; border-radius:18px; box-shadow:0 20px 40px rgba(0,0,0,.18); overflow:hidden; }
+    .modal-header { padding:20px 22px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .modal-header h2 { font-size:1.3rem; }
+    .close-btn { background:#f3f4f6; color:#111827; width:36px; height:36px; border-radius:10px; font-size:1.1rem; }
+    .modal-body { padding:22px; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .form-group { display:flex; flex-direction:column; gap:8px; }
+    .form-group.full { grid-column:1 / -1; }
+    label { font-size:.92rem; font-weight:bold; color:#374151; }
+    input, textarea, select { width:100%; border:1px solid var(--border); border-radius:12px; padding:12px 14px; font-size:.96rem; outline:none; transition:border-color .2s ease, box-shadow .2s ease; background:#fff; color:var(--text); }
+    input:focus, textarea:focus, select:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(245,158,11,.15); }
+    textarea { min-height:92px; resize:vertical; }
+    .helper { font-size:.82rem; color:var(--muted); }
+    .modal-footer { padding:18px 22px 22px; display:flex; justify-content:flex-end; gap:12px; flex-wrap:wrap; }
+    .toast { position:fixed; right:20px; bottom:20px; background:#111827; color:#fff; padding:14px 16px; border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,.18); opacity:0; transform:translateY(12px); pointer-events:none; transition:.25s ease; z-index:1200; max-width:320px; font-size:.95rem; }
+    .toast.show { opacity:1; transform:translateY(0); }
+    @media (max-width: 900px) { .form-grid { grid-template-columns:1fr; } }
     @media (max-width: 768px) {
-      .layout {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-      }
-
-      .main {
-        padding: 20px;
-      }
-
-      .topbar h1 {
-        font-size: 1.6rem;
-      }
+      .layout { flex-direction:column; }
+      .sidebar { width:100%; }
+      .main { padding:20px; }
+      .topbar h1 { font-size:1.6rem; }
     }
   </style>
 </head>
@@ -233,7 +80,6 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="logo">Panel<span>Maestro</span></div>
-
       <nav class="menu">
         <a href="#" class="active">Dashboard</a>
         <a href="#">Locales</a>
@@ -241,10 +87,7 @@
         <a href="#">Menús</a>
         <a href="#">Configuración</a>
       </nav>
-
-      <div class="sidebar-footer">
-        Panel central de gestión multi-local
-      </div>
+      <div class="sidebar-footer">Panel central de gestión multi-local</div>
     </aside>
 
     <main class="main">
@@ -253,90 +96,254 @@
           <h1>Dashboard</h1>
           <p>Gestioná todos tus locales desde un solo lugar.</p>
         </div>
-        <button class="btn">+ Crear local</button>
+        <button class="btn" id="openCreateStoreBtn">+ Crear local</button>
       </div>
 
       <section class="stats">
-        <div class="card">
-          <h3>Locales activos</h3>
-          <div class="value">3</div>
-        </div>
-
-        <div class="card">
-          <h3>Pedidos hoy</h3>
-          <div class="value">27</div>
-        </div>
-
-        <div class="card">
-          <h3>Ventas del día</h3>
-          <div class="value">$128.500</div>
-        </div>
-
-        <div class="card">
-          <h3>Locales inactivos</h3>
-          <div class="value">1</div>
-        </div>
+        <div class="card"><h3>Locales activos</h3><div class="value" id="activeStoresCount">0</div></div>
+        <div class="card"><h3>Pedidos hoy</h3><div class="value" id="ordersTodayCount">0</div></div>
+        <div class="card"><h3>Ventas del día</h3><div class="value" id="salesTodayValue">$0</div></div>
+        <div class="card"><h3>Locales inactivos</h3><div class="value" id="inactiveStoresCount">0</div></div>
       </section>
 
       <section>
-        <div class="section-header">
-          <h2>Tus locales</h2>
-        </div>
-
-        <div class="stores-grid">
-          <article class="store-card">
-            <div class="store-top">
-              <h3>Rotisería Centro</h3>
-              <span class="badge">Activo</span>
-            </div>
-
-            <div class="store-info">
-              Pedidos del día: 12<br>
-              Última actividad: hace 8 min
-            </div>
-
-            <div class="store-actions">
-              <button class="btn-secondary">Ver pedidos</button>
-              <button class="btn-secondary">Editar menú</button>
-            </div>
-          </article>
-
-          <article class="store-card">
-            <div class="store-top">
-              <h3>Burger House</h3>
-              <span class="badge">Activo</span>
-            </div>
-
-            <div class="store-info">
-              Pedidos del día: 9<br>
-              Última actividad: hace 20 min
-            </div>
-
-            <div class="store-actions">
-              <button class="btn-secondary">Ver pedidos</button>
-              <button class="btn-secondary">Editar menú</button>
-            </div>
-          </article>
-
-          <article class="store-card">
-            <div class="store-top">
-              <h3>Pizzería Don José</h3>
-              <span class="badge">Activo</span>
-            </div>
-
-            <div class="store-info">
-              Pedidos del día: 6<br>
-              Última actividad: hace 35 min
-            </div>
-
-            <div class="store-actions">
-              <button class="btn-secondary">Ver pedidos</button>
-              <button class="btn-secondary">Editar menú</button>
-            </div>
-          </article>
-        </div>
+        <div class="section-header"><h2>Tus locales</h2></div>
+        <div class="stores-grid" id="storesGrid"></div>
       </section>
     </main>
   </div>
+
+  <div class="modal" id="createStoreModal" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Crear local</h2>
+        <button class="close-btn" id="closeModalBtn" aria-label="Cerrar modal">✕</button>
+      </div>
+
+      <form id="createStoreForm">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="storeName">Nombre del local</label>
+              <input type="text" id="storeName" name="storeName" placeholder="Ej: Rotisería Centro" required />
+            </div>
+
+            <div class="form-group">
+              <label for="storeSlug">Slug</label>
+              <input type="text" id="storeSlug" name="storeSlug" placeholder="Ej: rotiseria-centro" required />
+              <span class="helper">Se usa como identificador único del local.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="storeWhatsapp">WhatsApp</label>
+              <input type="text" id="storeWhatsapp" name="storeWhatsapp" placeholder="Ej: 5493756123456" required />
+            </div>
+
+            <div class="form-group">
+              <label for="storeColor">Color principal</label>
+              <input type="color" id="storeColor" name="storeColor" value="#f59e0b" />
+            </div>
+
+            <div class="form-group">
+              <label for="storeStatus">Estado</label>
+              <select id="storeStatus" name="storeStatus">
+                <option value="active">Activo</option>
+                <option value="inactive">Inactivo</option>
+              </select>
+            </div>
+
+            <div class="form-group full">
+              <label for="storeDescription">Descripción</label>
+              <textarea id="storeDescription" name="storeDescription" placeholder="Ej: Pizzas, hamburguesas y empanadas con delivery rápido."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelModalBtn">Cancelar</button>
+          <button type="submit" class="btn">Guardar local</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = 'panelMaestroStores';
+
+    const openCreateStoreBtn = document.getElementById('openCreateStoreBtn');
+    const createStoreModal = document.getElementById('createStoreModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const createStoreForm = document.getElementById('createStoreForm');
+    const storesGrid = document.getElementById('storesGrid');
+
+    const activeStoresCount = document.getElementById('activeStoresCount');
+    const inactiveStoresCount = document.getElementById('inactiveStoresCount');
+    const ordersTodayCount = document.getElementById('ordersTodayCount');
+    const salesTodayValue = document.getElementById('salesTodayValue');
+    const toast = document.getElementById('toast');
+
+    const initialStores = [
+      { id: crypto.randomUUID(), name: 'Rotisería Centro', slug: 'rotiseria-centro', whatsapp: '5493756123456', description: 'Comidas caseras, delivery y promos del día.', color: '#f59e0b', status: 'active', createdAt: new Date().toISOString() },
+      { id: crypto.randomUUID(), name: 'Burger House', slug: 'burger-house', whatsapp: '5493756123000', description: 'Hamburguesas, papas y combos.', color: '#10b981', status: 'active', createdAt: new Date().toISOString() },
+      { id: crypto.randomUUID(), name: 'Pizzería Don José', slug: 'pizzeria-don-jose', whatsapp: '5493756123999', description: 'Pizzas al molde y empanadas.', color: '#3b82f6', status: 'inactive', createdAt: new Date().toISOString() }
+    ];
+
+    function getStores() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialStores));
+        return initialStores;
+      }
+      try {
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveStores(stores) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stores));
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function openModal() {
+      createStoreModal.classList.add('show');
+      createStoreModal.setAttribute('aria-hidden', 'false');
+      setTimeout(() => document.getElementById('storeName').focus(), 50);
+    }
+
+    function closeModal() {
+      createStoreModal.classList.remove('show');
+      createStoreModal.setAttribute('aria-hidden', 'true');
+      createStoreForm.reset();
+      document.getElementById('storeColor').value = '#f59e0b';
+      document.getElementById('storeStatus').value = 'active';
+      document.getElementById('storeSlug').dataset.userEdited = '';
+    }
+
+    function slugify(text) {
+      return text.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+    }
+
+    function renderStats(stores) {
+      const active = stores.filter(store => store.status === 'active').length;
+      const inactive = stores.filter(store => store.status === 'inactive').length;
+      activeStoresCount.textContent = active;
+      inactiveStoresCount.textContent = inactive;
+      ordersTodayCount.textContent = '0';
+      salesTodayValue.textContent = '$0';
+    }
+
+    function escapeHtml(value) {
+      return String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+    }
+
+    function renderStores() {
+      const stores = getStores();
+      renderStats(stores);
+
+      if (!stores.length) {
+        storesGrid.innerHTML = '<div class="empty-state"><h3>No hay locales todavía</h3><p>Creá tu primer local desde el botón <strong>+ Crear local</strong> para empezar a gestionar tu panel maestro.</p></div>';
+        return;
+      }
+
+      storesGrid.innerHTML = stores.map(store => `
+        <article class="store-card" style="border-top-color: ${store.color || '#e5e7eb'}">
+          <div class="store-top">
+            <h3>${escapeHtml(store.name)}</h3>
+            <span class="badge ${store.status === 'active' ? 'active' : 'inactive'}">${store.status === 'active' ? 'Activo' : 'Inactivo'}</span>
+          </div>
+          <div class="store-info">
+            <strong>Slug:</strong> ${escapeHtml(store.slug)}<br>
+            <strong>WhatsApp:</strong> ${escapeHtml(store.whatsapp)}<br>
+            <strong>Descripción:</strong> ${escapeHtml(store.description || 'Sin descripción')}
+          </div>
+          <div class="store-actions">
+            <button class="btn-secondary" type="button">Ver pedidos</button>
+            <button class="btn-secondary" type="button">Editar menú</button>
+            <button class="btn-danger" type="button" onclick="deleteStore('${store.id}')">Eliminar</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function deleteStore(storeId) {
+      const stores = getStores();
+      const target = stores.find(store => store.id === storeId);
+      if (!target) return;
+      if (!confirm(`¿Eliminar el local "${target.name}"?`)) return;
+      saveStores(stores.filter(store => store.id !== storeId));
+      renderStores();
+      showToast('Local eliminado correctamente.');
+    }
+    window.deleteStore = deleteStore;
+
+    openCreateStoreBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelModalBtn.addEventListener('click', closeModal);
+
+    createStoreModal.addEventListener('click', (event) => {
+      if (event.target === createStoreModal) closeModal();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && createStoreModal.classList.contains('show')) closeModal();
+    });
+
+    const storeNameInput = document.getElementById('storeName');
+    const storeSlugInput = document.getElementById('storeSlug');
+
+    storeNameInput.addEventListener('input', () => {
+      if (!storeSlugInput.dataset.userEdited) storeSlugInput.value = slugify(storeNameInput.value);
+    });
+
+    storeSlugInput.addEventListener('input', () => {
+      storeSlugInput.dataset.userEdited = storeSlugInput.value.trim() ? 'true' : '';
+    });
+
+    createStoreForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(createStoreForm);
+      const stores = getStores();
+      const newStore = {
+        id: crypto.randomUUID(),
+        name: formData.get('storeName').toString().trim(),
+        slug: slugify(formData.get('storeSlug').toString().trim()),
+        whatsapp: formData.get('storeWhatsapp').toString().trim(),
+        description: formData.get('storeDescription').toString().trim(),
+        color: formData.get('storeColor').toString(),
+        status: formData.get('storeStatus').toString(),
+        createdAt: new Date().toISOString()
+      };
+
+      if (!newStore.name || !newStore.slug || !newStore.whatsapp) {
+        showToast('Completá los campos obligatorios.');
+        return;
+      }
+
+      if (stores.some(store => store.slug === newStore.slug)) {
+        showToast('Ese slug ya existe. Elegí otro.');
+        return;
+      }
+
+      stores.unshift(newStore);
+      saveStores(stores);
+      renderStores();
+      closeModal();
+      showToast('Local creado correctamente.');
+    });
+
+    renderStores();
+  </script>
 </body>
 </html>
