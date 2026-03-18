@@ -498,9 +498,16 @@
   </div>
 
   <script>
+    document.addEventListener("DOMContentLoaded", () => {
     const SUPABASE_URL = "https://bkycmybpouygdvyuczqu.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_WJN6L01FPmlusK0Eci3lig_0o-e1UVh";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    if (typeof supabase === "undefined") {
+      alert("No cargó la librería de Supabase. Probá recargar la página.");
+      return;
+    }
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const openCreateStoreBtn = document.getElementById("openCreateStoreBtn");
     const cancelCreateStoreBtn = document.getElementById("cancelCreateStoreBtn");
@@ -591,7 +598,7 @@
     async function loadStores() {
       storesGrid.innerHTML = '<div class="empty-state">Cargando locales...</div>';
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from("stores")
         .select("*")
         .order("created_at", { ascending: false });
@@ -607,7 +614,7 @@
     }
 
     async function createStore(storeData) {
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from("stores")
         .insert([storeData]);
 
@@ -629,7 +636,7 @@
       const ok = confirm("¿Seguro que querés eliminar este local?");
       if (!ok) return;
 
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from("stores")
         .delete()
         .eq("id", id);
@@ -696,6 +703,7 @@
     });
 
     loadStores();
+    });
   </script>
 </body>
 </html>
